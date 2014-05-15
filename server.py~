@@ -1,4 +1,4 @@
-
+from flask import Flask
 from flask import Flask
 #Flask-Enterprise extension for SOAP
 from flaskext.enterprise import Enterprise
@@ -15,7 +15,7 @@ enterprise = Enterprise(app)
 #DATABASE 
 ##################
 
-DATABASE = "./test.db"
+DATABASE = "/home/luca/test.db"
 	
 	
 def get_db():
