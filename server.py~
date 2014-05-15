@@ -1,4 +1,4 @@
-from flask import Flask
+
 from flask import Flask
 #Flask-Enterprise extension for SOAP
 from flaskext.enterprise import Enterprise
@@ -13,11 +13,9 @@ enterprise = Enterprise(app)
 
 ##################
 #DATABASE 
+#funzioni di gestione del database, copiate pari pari dalla documentazione
 ##################
-
-DATABASE = "/home/luca/test.db"
-	
-	
+DATABASE = "./test.db"	
 def get_db():
 	db = getattr(g, '_database', None)
 	if db is None:
@@ -29,13 +27,15 @@ def close_connection(exception):
 	db = getattr(g, '_database', None)
 	if db is not None:
 		db.close()
-		
+				
 def query_db(query, args=(), one=False):
 	with app.app_context():
 		cur = get_db().execute(query, args)
 		rv = cur.fetchall()
 		cur.close()
+		#l'if è levabile e serve per ritornare un solo risultato
 		return (rv[0] if rv else None) if one else rv
+
 #flask-enterprise forse passa anche gli oggetti ma usiamo le strighe :v
 def queryToString(query_result):
 	with app.app_context():
@@ -48,6 +48,8 @@ def queryToString(query_result):
 		
 ##################
 #WEBSERVICE
+#la classe che rappresenta il webservice, ogni metodo ha il decoratore con tipi
+#di parametri e return
 ##################
 class DemoService(enterprise.SOAPService):
 	@enterprise.soap(_returns=enterprise._sp.String)
@@ -65,6 +67,7 @@ class DemoService(enterprise.SOAPService):
 		
 #############
 #WEBSITE
+#qui ci sono le app di flask, ho fatto delle provette poi bisognera fare un frontend carino
 #############		
 @app.route('/hello')
 def hello():
