@@ -10,6 +10,7 @@ from flask import g
 
 app = Flask(__name__)
 enterprise = Enterprise(app)
+
 ##################
 #DATABASE 
 ##################
@@ -35,7 +36,7 @@ def query_db(query, args=(), one=False):
 		rv = cur.fetchall()
 		cur.close()
 		return (rv[0] if rv else None) if one else rv
-
+#flask-enterprise forse passa anche gli oggetti ma usiamo le strighe :v
 def queryToString(query_result):
 	with app.app_context():
 		string = ""
