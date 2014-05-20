@@ -6,14 +6,10 @@ from time import ctime
 #SQLite interfacing
 import sqlite3
 from flask import g
-#for attachment
-from lxml import etree
 
 app = Flask(__name__)
 enterprise = Enterprise(app)
 
-STRING = enterprise._sp.String
-ATTACHMENT = enterprise._sb.Attachment
 ##################
 #DATABASE 
 #funzioni di gestione del database, copiate pari pari dalla documentazione
@@ -54,21 +50,12 @@ def queryToString(query_result):
 #la classe che rappresenta il webservice, ogni metodo ha il decoratore con tipi
 #di parametri e return
 ##################
-
 class DemoService(enterprise.SOAPService):
 	@enterprise.soap(enterprise._sp.String, _returns=enterprise._sp.String)
 	def sendQuery(self, query):
 		rv = query_db(query)
 		return queryToString(rv)
 		
-	@enterprise.soap(STRING, _returns=ATTACHMENT)
-	def attQuery(self,query):
-		rv = query_db(query)
-		a = ATTACHMENT(data=rv)
-		parent = etree.Element('parent')
-		ATTACHMENT.to_parent_element(a)
-		element = parent[0]
-		return element 
 #############
 #WEBSITE
 #qui ci sono le app di flask, ho fatto delle provette poi bisognera fare un frontend carino
@@ -82,12 +69,10 @@ def hello():
 		 	rs += i + " "
 		 rs+="</p>"
 	return rs
-	
-
 #############
 
 if __name__ == '__main__':
 	#debug andra tolto
 	app.debug = True
 	#il tutto viene avviato qui: http://localhost:porta/
-	app.run(port = 5000)
+	app.run(port = 5001)

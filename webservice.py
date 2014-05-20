@@ -6,20 +6,20 @@ from time import ctime
 #SQLite interfacing
 import sqlite3
 from flask import g
-#for attachment
-from lxml import etree
 
 app = Flask(__name__)
 enterprise = Enterprise(app)
 
 STRING = enterprise._sp.String
-ATTACHMENT = enterprise._sb.Attachment
+
 ##################
 #DATABASE 
 #funzioni di gestione del database, copiate pari pari dalla documentazione
 ##################
-DATABASE = "./test.db"	
-def get_db():
+home_db = ./index.db
+database = []
+
+def get_db(DATABASE):
 	db = getattr(g, '_database', None)
 	if db is None:
 		db = g._database = sqlite3.connect(DATABASE)
@@ -30,10 +30,21 @@ def close_connection(exception):
 	db = getattr(g, '_database', None)
 	if db is not None:
 		db.close()
-				
-def query_db(query, args=(), one=False):
+def create_table(name):
+	query = 'CREATE TABLE ' + name + '(Autore char[50],Titolo char[50],Etichetta char[50], Codice[10],Tipo[10])'
+	query_db(query,home_db)
+		
+def register_shop(URL,DB,SHOPNAME):
+	create_table(SHOPNAME)
+	WSDL = URL + '?wsdl'
+	client = Client(url = WSDL, location = URL)
+	client.options.cache.clear()
+	
+	
+	
+def query_db(query,db, args=(), one=False):
 	with app.app_context():
-		cur = get_db().execute(query, args)
+		cur = get_db(db).execute(query, args)
 		rv = cur.fetchall()
 		cur.close()
 		#l'if e levabile e serve per ritornare un solo risultato
@@ -54,21 +65,13 @@ def queryToString(query_result):
 #la classe che rappresenta il webservice, ogni metodo ha il decoratore con tipi
 #di parametri e return
 ##################
-
 class DemoService(enterprise.SOAPService):
-	@enterprise.soap(enterprise._sp.String, _returns=enterprise._sp.String)
-	def sendQuery(self, query):
-		rv = query_db(query)
-		return queryToString(rv)
+	
+	@enterprise.soap(STRING,STRING,STRING, _returns=STRING)
+	def register_shop(self, url,db,shopname):
+		register(url,db,shopname)
+		return "done"
 		
-	@enterprise.soap(STRING, _returns=ATTACHMENT)
-	def attQuery(self,query):
-		rv = query_db(query)
-		a = ATTACHMENT(data=rv)
-		parent = etree.Element('parent')
-		ATTACHMENT.to_parent_element(a)
-		element = parent[0]
-		return element 
 #############
 #WEBSITE
 #qui ci sono le app di flask, ho fatto delle provette poi bisognera fare un frontend carino
@@ -82,12 +85,10 @@ def hello():
 		 	rs += i + " "
 		 rs+="</p>"
 	return rs
-	
-
 #############
 
 if __name__ == '__main__':
 	#debug andra tolto
 	app.debug = True
 	#il tutto viene avviato qui: http://localhost:porta/
-	app.run(port = 5000)
+	app.run(port = 5001)
