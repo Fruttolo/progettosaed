@@ -14,6 +14,7 @@ enterprise = Enterprise(app)
 
 STRING = enterprise._sp.String
 ATTACHMENT = enterprise._sb.Attachment
+BOOL = enterprise._sp.Boolean
 ##################
 #DATABASE 
 #funzioni di gestione del database, copiate pari pari dalla documentazione
@@ -48,6 +49,13 @@ def queryToString(query_result):
 				string += i + " "
 			string += "\n"
 		return string
+####
+def attQuery(query):
+	rv = query_db(query)
+	a = ATTACHMENT(data = rv)
+	parent = etree.Element('parent')
+	ATTACHMENT.to_parent_element(a)
+	return 1
 		
 ##################
 #WEBSERVICE
@@ -61,14 +69,9 @@ class DemoService(enterprise.SOAPService):
 		rv = query_db(query)
 		return queryToString(rv)
 		
-	@enterprise.soap(STRING, _returns=ATTACHMENT)
-	def attQuery(self,query):
-		rv = query_db(query)
-		a = ATTACHMENT(data=rv)
-		parent = etree.Element('parent')
-		ATTACHMENT.to_parent_element(a)
-		element = parent[0]
-		return element 
+	@enterprise.soap(STRING,_returns = BOOL )
+	def attcQuery(self,query):
+		return attQuery(query)
 #############
 #WEBSITE
 #qui ci sono le app di flask, ho fatto delle provette poi bisognera fare un frontend carino
@@ -82,7 +85,15 @@ def hello():
 		 	rs += i + " "
 		 rs+="</p>"
 	return rs
-	
+
+@app.route('/attc')
+def attc():
+	if attQuery("select * from catalogo"):
+		element = parent[0]
+		print etree.tostring(element)
+		print ATTACHMENT.from_xml(element).data
+	else:
+		print error	
 
 #############
 
