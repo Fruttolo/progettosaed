@@ -10,18 +10,18 @@ enterprise = Enterprise(app)
 soap_url = 'http://localhost:5000/_enterprise/soap'
 wsdl_url = 'http://localhost:5000/_enterprise/soap?wsdl'
 ATT = enterprise._sb.Attachment
-print "---BVR SOAP CLIENT---\n"
-print "connecting...",
+print("---BVR SOAP CLIENT---\n")
+print("connecting...")
 
 client = Client(url = wsdl_url, location = soap_url)
 #suds fa il caching del wsdl, se cambi qualcosa e bene riscaricarlo, quindi va fatto un clear
 client.options.cache.clear()
 #interfaccina totalmente inutile :v
-print "connected!\n"
+print("connected!\n")
 while(1):
 	query = raw_input("write your query: ")
 	if query == "quit": break;
-	print "\n" + client.service.sendQuery(query) + "\n"
+	print("\n" + client.service.sendQuery(query) + "\n")
 	# if client.service.attQuery(query):
 	# 	string = ""
 	# 	element = parent[0]

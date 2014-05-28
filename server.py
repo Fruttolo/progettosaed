@@ -72,6 +72,7 @@ class DemoService(enterprise.SOAPService):
 	@enterprise.soap(STRING,_returns = BOOL )
 	def attcQuery(self,query):
 		return attQuery(query)
+
 #############
 #WEBSITE
 #qui ci sono le app di flask, ho fatto delle provette poi bisognera fare un frontend carino
@@ -90,12 +91,10 @@ def hello():
 def attc():
 	if attQuery("select * from catalogo"):
 		element = parent[0]
-		print etree.tostring(element)
-		print ATTACHMENT.from_xml(element).data
+		print(etree.tostring(element))
+		print(ATTACHMENT.from_xml(element).data)
 	else:
-		print error	
-
-#############
+		print(error)	
 
 if __name__ == '__main__':
 	#debug andra tolto
