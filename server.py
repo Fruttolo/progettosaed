@@ -1,6 +1,6 @@
 from flask import Flask
 #Flask-Enterprise extension for SOAP
-from flaskext.enterprise import Enterprise
+from flask.ext.enterprise import Enterprise
 #Test function
 from time import ctime
 #SQLite interfacing
