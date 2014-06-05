@@ -1,14 +1,8 @@
 ##spyne-flask webservice
 #prende in input gli url dei wsdl dei negozi e poi li quera uno per volta per ottenere i risultati
-
 from flask import Flask
-
 from flask.ext.spyne import Spyne
-
-from spyne.protocol.http import HttpRpc
 from spyne.protocol.soap import Soap11
-from spyne.protocol.json import JsonDocument
-
 from spyne.model.primitive import Unicode, Integer
 from spyne.model.complex import Iterable, ComplexModel
 
@@ -19,15 +13,9 @@ rl.setLevel(logging.DEBUG)
 rl.addHandler(h)
 
 app = Flask(__name__)
-
 spyne = Spyne(app)
 
 shops = {"negozio1": "http://localhost:8000/?wsdl"}
-
-class AnswerServiceResponse(ComplexModel):
-    __namespace__ = 'tns'
-    dummy_str = Unicode(min_occurs=0, max_occurs=1, nillable=False)
-    dummy_num = Integer(min_occurs=1, max_occurs=1, nillable=True)
 
 class RegisterService(spyne.Service):
     __service_url_path__ = '/soap/registrationservice'
@@ -40,6 +28,20 @@ class RegisterService(spyne.Service):
     def register_shop(shop_name, shop_url):
     	shops[shop_name] = shop_url
     	return 1
+
+#TODO
+"""
+a function which connects to each shop in the dict and retrives albums throught their web service
+
+
+from suds.client import Client as SudsClient
+def clientSOAP(args):
+    srv_url = 'http://127.0.0.1:8000/?wsdl'
+    client = SudsClient(url=url, cache=None)
+    client.service.someservice()
+
+"""
+
 #####################
 #PRETTY HOMEPAGE PART YAY
 ######################
