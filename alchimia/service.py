@@ -6,6 +6,8 @@ from spyne.protocol.soap import Soap11
 from spyne.model.primitive import Unicode, Integer
 from spyne.model.complex import Iterable, ComplexModel
 
+from suds.client import Client
+
 import logging
 h = logging.StreamHandler()
 rl = logging.getLogger()
@@ -21,7 +23,7 @@ class RegisterService(spyne.Service):
     __service_url_path__ = '/soap/registrationservice'
     __in_protocol__ = Soap11(validator='lxml')
     __out_protocol__ = Soap11()
-    """
+    """os.path.dirname(os.path.realpath(__file__))
     this service generates a dictonary of registered shop which shall be queried for results
     """
     @spyne.srpc(Unicode, Unicode, _returns=Integer)
@@ -32,15 +34,12 @@ class RegisterService(spyne.Service):
 #TODO
 """
 a function which connects to each shop in the dict and retrives albums throught their web service
-
-
-from suds.client import Client as SudsClient
-def clientSOAP(args):
-    srv_url = 'http://127.0.0.1:8000/?wsdl'
-    client = SudsClient(url=url, cache=None)
-    client.service.someservice()
-
 """
+def get_albums():
+    srv_url = 'http://localhost:8000/?wsdl'
+    c = Client(srv_url)
+    c.service.get_all_album()
+
 
 #####################
 #PRETTY HOMEPAGE PART YAY
@@ -53,6 +52,16 @@ def cane():
 		s += "<p>" + i +"\t"+ shops[i] + "</p>"
 	return s
 
+@app.route('/album')
+def album():
+    s = ""
+    srv_url = 'http://localhost:8000/?wsdl'
+    c = Client(srv_url)
+    x = c.service.get_all_album()
+    for i in x[0]:
+        s += "<p>" + i.title + "</p>"
+    return s
+
 if __name__ == '__main__':
-	app.debug = True
-	app.run(port = 5000)
+    app.debug = True
+    app.run(port = 5000)

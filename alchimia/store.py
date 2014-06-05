@@ -2,6 +2,7 @@
 va fatto un client del negoziante con cui si interagisce con il database tramite le chiamate sotto
 poi va fatta una funzione che gestisce le query e le ritorna al servizio che poi le postera sul sito
 """
+import os
 import logging
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger('spyne.protocol.xml').setLevel(logging.DEBUG)
@@ -29,7 +30,7 @@ from spyne.server.wsgi import WsgiApplication
 from spyne.service import ServiceBase
 
 
-db = create_engine('sqlite:////home/luca/Documents/Anno_3/Sistemi_Aperti_e_Distribuiti/progettosaed/alchimia/prova.db')
+db = create_engine('sqlite:///'+os.path.dirname(os.path.realpath(__file__))+'/prova.db')
 Session = sessionmaker(bind=db)
 
 # This is what calling TTableModel does. This is here for academic purposes.
@@ -48,7 +49,8 @@ class Album(TableModel):
     lenght = UnsignedInteger32
     tracks = UnsignedInteger32
     genre = Unicode(64)
-    label = Unicode(64) 
+    label = Unicode(64)
+
 ######################################
 #CLIENT PART(REGISTERING TO SERVICE)
 ##############################
@@ -66,17 +68,17 @@ class RecordStoreService(ServiceBase):
     all query are pretty useless except get_all_album, TODO: useful things...
     """
     @rpc(Mandatory.UnsignedInteger32, _returns=Album)
-    """
-    gets album by id
-    """
     def get_album(ctx, user_id):
+        """
+        gets album by id
+        """
         return ctx.udc.session.query(Album).filter_by(id=album_id).one()
 
     @rpc(Album, _returns=UnsignedInteger32)
-    """
-    add an album to the database and returns his id
-    """
     def put_album(ctx, album):
+        """
+        add an album to the database and returns his id
+        """        
         if album.id is None:
             ctx.udc.session.add(album)
             ctx.udc.session.flush() # so that we get the album.id value
@@ -98,7 +100,7 @@ class RecordStoreService(ServiceBase):
 
     @rpc(Mandatory.UnsignedInteger32)
     def del_album(ctx, album_id):
-        """
+        """http://www.python.so/
         removes an album from the database if one with the provided id exist
         """
         count = ctx.udc.session.query(User).filter_by(id=user_id).count()
