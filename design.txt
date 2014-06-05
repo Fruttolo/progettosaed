@@ -12,3 +12,7 @@ Il sito passa via SOAP la ricerca ai singoli servizi negozio
 I servizi negozio rispondono
 
 Il sito presenta i risultati della query all'utente
+
+
+
+I negozianti devono poter aggiungere e rimuovere album dai loro database pollabili dal sito unico. Lo fanno attraverso un comando da console, per simulare il caso d'uso in cui questo comando venga aggiunto ad un infrastruttura di database già presente.
