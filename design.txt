@@ -1,0 +1,14 @@
+Cooperativa di negozi di musica
+
+Ci sono vari negozi di supporti fisici contenenti musica.
+Per ritardare il loro inevitabile fallimento decidono di fare un sito che permetta di browsare in un colpo solo tutti i loro database.
+
+Va quindi implementato questo caso d'uso:
+
+Utente va sul sito unico, fa la ricerca
+
+Il sito passa via SOAP la ricerca ai singoli servizi negozio
+
+I servizi negozio rispondono
+
+Il sito presenta i risultati della query all'utente
