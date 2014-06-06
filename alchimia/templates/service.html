@@ -1,0 +1,107 @@
+<html>
+<head>
+<title>record store browser</title>
+<style>
+	body{
+		background-color: lightgrey;	
+	}
+	.body{
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		top: 0;
+		left: 0;
+		}
+	.container{
+		display: table;
+		background-color: white;
+		text-align: center;
+		margin-top: 3.5em;
+		margin-left: 20%;
+		height: 100%;
+		width: 60%;
+		box-shadow: 1px 3px 3px 0px #888;
+	}
+	.header{
+		position: fixed;
+		z-index: 3;
+		background-color: lightblue;
+		color: white;
+		width: 100%;
+		margin-bottom: 1%;
+		
+		font-family: Georgia;
+		font-style: bold;
+		font-size: 3em;
+		text-align: center;
+		box-shadow: 0px 3px 3px 0px #888;
+	}
+	.list{
+		display: inline-block;
+		padding: 1em;
+		margin: auto;
+	}
+	.element{
+		float: left;
+		display: table-cell;
+		background-color: white;
+		display: inline-block;
+		margin: 5px;
+		height: 200px;
+		width: 200px;
+		border: 3px solid black;
+		border-radius: .3em;
+	}
+	.title{
+		padding: .3em;
+		font-family: Georgia;
+		color: #800;
+		font-weight: 10;
+		font-size: 18;
+	}
+	.author{
+		padding: .3em;	
+		font-weight: 4;
+		font-style: italic;
+		font-size: 12;
+	}
+	.footer{
+		position: relative;
+		bottom: 0px;
+		width: 100%;
+		background-color: lightblue;
+		color: white;
+		font-family: Georgia;
+		font-style: bold;
+		font-size: 1em;
+		text-align: center;	
+	}
+
+</style>
+</head>
+<body>
+<div class="body">
+	
+	<div class="header">Record Store Browser</div>
+	
+	<div class="container">
+		<span style="float: left; margin-top: 10px; padding: 5px">Results:</span>
+		<ul class="list">
+		{% for item in rv[0] %}
+			<li class="element">
+				<span class="title">{{item.title}}</span>
+				<br/>
+				<span class="author">{{item.author}}<span>
+				<br/>
+				<span class="author">prezzo: €</span>
+			</li>
+		{% endfor %}
+		</ul>
+
+	</div>
+	
+	<div class="footer">Luca Casini - Francesco Mastellone © 2014</div>
+
+</div>
+</body>
+</html>
