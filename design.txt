@@ -11,3 +11,13 @@ Lo sviluppo del servizio va quindi implementato attorno a questo caso d'uso:
 - Il sito presenta i risultati della query all'utente
 
 I negozianti devono poter aggiungere e rimuovere album dai loro database. Lo fanno attraverso un comando da console, per simulare il caso in cui questo comando possa venire incollato su una preesistente infrastruttura di gestione del database.
+
+Descrizione dei moduli, fra parentesi le librerie utilizzate:
+- service.py
+    L'interfaccia web (Flask) con cui vengono prodotte le query
+- query.py
+    Il modulo che fa la richiesta SOAP (suds)
+- store.py
+    Il servizio SOAP (spyne)
+- database.py
+    Le utility per i commercianti (SQLAlchemy)

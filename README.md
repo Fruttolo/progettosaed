@@ -1,7 +1,7 @@
 progettosaed
 ============
 
-A university project done for the Open & Distributed Systems course.
+A university project done for unipg's Open & Distributed Systems course.
 
 We have to write a unified record store service, using SOAP.
 

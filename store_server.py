@@ -9,7 +9,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from spyne.error import InternalError, ResourceNotFoundError
 
-from spyne.model.primitive import Mandatory, Unicode, UnsignedInteger32
+from spyne.model.primitive import Integer, Unicode
 from spyne.model.complex import Array, Iterable, ComplexModelBase, ComplexModelMeta
 from spyne.model.fault import Fault
 
@@ -28,32 +28,26 @@ class TableModel(ComplexModelBase):
 
 class Record(TableModel):
     __tablename__ = 'record'
-    __namespace__ = 'spyne.recordstore.record'
+    __namespace__ = 'recordstorecoop.record'
     __table_args__= {"sqlite_autoincrement": True}
 
     id = UnsignedInteger32(pk=True)
     title = Unicode
     author = Unicode
-    year = UnsignedInteger32
-    length = UnsignedInteger32
+    genre = Unicode
+    year = Integer
     thumbnail_url = Unicode
     tracklist = Array(Unicode)
 
 class RecordStoreService(ServiceBase):
-    @rpc(Mandatory.UnsignedInteger32, _returns=Record)
-    def get_record(ctx, user_id):
-        """
-        gets album by id
-        """
-        return ctx.udc.session.query(Record).filter_by(id=album_id).one()
+    @rpc(Record, _returns=Array(Record))
+    def get_record(ctx, rq): #rq stands for record query, a Record instance
+        #ctx.udc.session.query(Record).filter_by(id=album_id).one()
+        raise ResourceNotFoundError #TODO implement this shit
     
-    @rpc(_returns=Iterable(Record))
+    @rpc(_returns=Array(Record))
     def get_all_records(ctx):
-        """
-        returns an Iterable with all albums in the database
-        """
         return ctx.udc.session.query(Record)
-
 
 class UserDefinedContext(object):
     def __init__(self):
@@ -68,8 +62,7 @@ def _on_method_context_closed(ctx):
         ctx.udc.session.close()
 
 class MyApplication(Application):
-    def __init__(self, services, tns, name=None,
-                                         in_protocol=None, out_protocol=None):
+    def __init__(self, services, tns, name=None, in_protocol=None, out_protocol=None):
         super(MyApplication, self).__init__(services, tns, name, in_protocol, out_protocol)
 
         self.event_manager.add_listener('method_call', _on_method_call)
@@ -94,15 +87,11 @@ if __name__=='__main__':
     
     port = int(sys.argv[1]) #[0] is __name__
     
-    application = MyApplication([RecordStoreService],
-                'spyne.recordstore',
-                in_protocol=Soap11(validator='lxml'),
-                out_protocol=Soap11(),)
-
-    wsgi_app = WsgiApplication(application)
-    server = make_server('127.0.0.1', port, wsgi_app)
+    app = MyApplication([RecordStoreService], 'recordstorecoop', in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())
+    server = make_server('127.0.0.1', port, WsgiApplication(app))
 
     TableModel.Attributes.sqla_metadata.create_all()
+    
     logging.info("listening to http://127.0.0.1:{}".format(port))
     logging.info("wsdl is at: http://127.0.0.1:{}/?wsdl".format(port))
 
