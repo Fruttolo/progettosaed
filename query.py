@@ -14,7 +14,7 @@ for url in urls:
 
 a = clients[0] #for quicker debugging. Excuse me.
 
-def query(title=None, author=None, genre=None, year=None, thumbnail_url=None, description=None, quantity=None):
+def get_records(title=None, author=None, genre=None, year=None, thumbnail_url=None, description=None, quantity=None, price = None):
     """This is what the website is supposed to call. Safe."""
     for c in clients:
         rq = c.factory.create("Record")
@@ -25,5 +25,6 @@ def query(title=None, author=None, genre=None, year=None, thumbnail_url=None, de
         rq.thumbnail_url = thumbnail_url
         rq.description = description
         rq.quantity = quantity
+        rq.price = price
         for r in c.service.get_records(rq):
             yield r

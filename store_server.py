@@ -37,6 +37,7 @@ class Record(TableModel):
     thumbnail_url = Unicode
     description = Unicode
     quantity = UnsignedInteger32
+    price = UnsignedInteger32
 
 class RecordStoreService(ServiceBase):
     @rpc(Record, _returns=Iterable(Record))

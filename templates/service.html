@@ -19,7 +19,7 @@
 		margin-top: 3.5em;
 		margin-left: 20%;
 		height: 100%;
-		width: 60%;
+		width: 55%;
 		box-shadow: 1px 3px 3px 0px #888;
 	}
 	.header{
@@ -29,38 +29,36 @@
 		color: white;
 		width: 100%;
 		margin-bottom: 1%;
-		
 		font-family: Georgia;
 		font-style: bold;
 		font-size: 3em;
 		text-align: center;
-		box-shadow: 0px 3px 3px 0px #888;
+		box-shadow: 1px 3px 3px 0px #888;
 	}
 	.list{
-		display: inline-block;
-		padding: 1em;
-		margin: auto;
+		background-color: yellow;
 	}
 	.element{
 		float: left;
-		display: table-cell;
-		background-color: white;
-		display: inline-block;
+		display: table-cell;	
+		width: 170px;
+		height: auto;
+		text-align: left;
 		margin: 5px;
-		height: 200px;
-		width: 200px;
-		border: 3px solid black;
-		border-radius: .3em;
+		border: 1px dotted lightblue;
+		border-radius: 3px;
 	}
 	.title{
-		padding: .3em;
-		font-family: Georgia;
-		color: #800;
+		margin-left: .3em;
+		text-align: center;
+		font-family: sans;
+		color: black;
 		font-weight: 10;
-		font-size: 18;
+		font-size: 14;
 	}
-	.author{
-		padding: .3em;	
+	.info{
+		padding: .3em;
+		color: grey;
 		font-weight: 4;
 		font-style: italic;
 		font-size: 12;
@@ -76,6 +74,25 @@
 		font-size: 1em;
 		text-align: center;	
 	}
+	.thumbnail{
+		text-align: center;
+		padding: 10px;
+		height: 150px;
+		width: 150px;
+		float: left;
+	}
+	.subheader{
+		text-align: left;x
+		padding-left: 3em;
+		padding-right: 3em;
+		width: 80%;
+		margin-top: 1em; 
+		display: inline-block;
+	}
+	.form{
+		border-bottom: 3px dotted black;
+		margin-bottom: 1em;
+	}
 
 </style>
 </head>
@@ -85,16 +102,35 @@
 	<div class="header">Record Store Browser</div>
 	
 	<div class="container">
-		<span style="float: left; margin-top: 10px; padding: 5px">Results:</span>
+
+		<div class="subheader">
+			Search:
+			<form class="form" method="POST">
+				<input type="text" name="author"/>
+				<input type="text" name="title"/>
+				<input type="submit" name="search" style="margin-bottom: 1em"/>
+			</form>
+			Results: 
+		</div>
+
 		<ul class="list">
-		{% for item in rv[0] %}
-			<li class="element">
-				<span class="title">{{item.title}}</span>
-				<br/>
-				<span class="author">{{item.author}}<span>
-				<br/>
-				<span class="author">prezzo: €</span>
-			</li>
+		{% for y in rv %}
+			{% for i in y[1] %}
+				<li class="element">
+					<span class="title">{{i.title}}</span>
+					<br/>
+					<span class="info">{{i.author}}</span>
+					<br/>
+					<span class="info">prezzo: {{i.price}}€</span>
+					<br/>
+					{% if i.quantity == 0 %}
+						<span class="info" style="color: red">Non Disponibile!</span>
+					{% else %}
+						<span class="info" style="color: #3a3">Disponibile: {{i.quantity}}</span>
+					{% endif %}					
+					<img class="thumbnail" src="{{i.thumbnail_url}}"/>
+				</li>
+			{% endfor %}
 		{% endfor %}
 		</ul>
 
