@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 @app.route('/index.html') #@app.route('/cane/?<query>')
 def cane():
-    rv = query.get_all_records();
+    rv = query.get_record();
     return render_template('service.html', rv=rv)
 
 if __name__ == '__main__':

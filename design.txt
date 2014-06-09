@@ -1,35 +1,44 @@
-Cooperativa di negozi di musica
+Cooperativa di Negozi di Musica
 
-ESEMPIO D'UTILIZZO:
-in una console:
-    python2 store_server.py 8000
-in un'altra:
+Immaginiamo vari negozi di supporti fisici contenenti musica.
+Per ritardare il loro inevitabile fallimento, decidono di unificare le API dei loro siti, rendendole fruibili da un sito unico che permetta di scorrere in un colpo solo tutti i loro cataloghi, semplificando così la vita, e soprattutto l'acquisto, ai possibili clienti.
+
+DIMOSTRAZIONE D'UTILIZZO:
+in un terminale:
+    python2 store_server.py 8000 od 8001
+in un altro:
     python2 service.py 5000
 in un browser:
     localhost 127.0.0.1:5000/index.html
 
-store_server può partire sulla porta che vuole ma poi service va a cercarlo sempre dove dice shops.json ovvero a localhost:8000
+store_server può partire sulla porta che vuole ma service va a cercare gli store dove dice shops.json: in localhost:8000 ed 8001
 
-Ci sono vari negozi di supporti fisici contenenti musica.
-Per ritardare il loro inevitabile fallimento decidono di fare un sito che permetta di browsare in un colpo solo tutti i loro database, semplificando così la vita ai possibili clienti.
+Caso d'uso:
+    - Utente va sul sito unico, fa la ricerca(per nome, o genere, o...)
+    - Il sito chiede ai negozi, via SOAP
+    - I negozi, dei servizi SOAP, rispondono
+    - Il sito presenta i risultati della query all'utente
 
-Lo sviluppo del servizio va quindi implementato attorno a questo caso d'uso:
+Si presume che i negozianti abbiano già un sistema di gestione dei loro database e che nell'aderire all'iniziativa abbiano già, alternativamente:
+    - uniformato i loro schemi a quello unico
+    - esposto perlomeno la stessa API SOAP
 
-- Utente va sul sito unico, fa la ricerca(per nome, o genere, o...)
-- Il sito chiede ai negozi, via SOAP
-- I negozi, dei servizi SOAP, rispondono
-- Il sito presenta i risultati della query all'utente
-
-I negozianti devono poter aggiungere e rimuovere album dai loro database. Lo fanno attraverso un comando da console, per simulare il caso in cui questo comando possa venire incollato su una preesistente infrastruttura di gestione del database.
-
-Descrizione dei moduli, fra parentesi le librerie utilizzate:
+Descrizione dei moduli: (fra parentesi le librerie usate)
 - service.py
     L'interfaccia web (Flask) con cui vengono prodotte le query
 - query.py
     Il modulo che fa la richiesta SOAP (suds)
-- store.py
+- store_server.py
     Il servizio SOAP (spyne)
 
-Che dati contiene un Record: vedere store_server.py
+
+
+DETTAGLI D'IMPLEMENTAZIONE:
+Che dati contiene un Record?
+    Vedere store_server.py
 
 records.db contiene già un album di prova.
+
+TODO: implementare il ristabilimento delle connessioni agli store
+
+il caching ottuso di suds mi ha dato infiniti problemi durante il debugging, quindi l'ho disabilitato(i suddetti negozi di dischi non prevedono grandi traffici). Per sicurezza, è sempre meglio rimuovere /tmp/suds, in altre parole, kill it with fire.

@@ -25,7 +25,7 @@ class TableModel(ComplexModelBase):
     __metadata__ = MetaData(bind=db)
 
 class Record(TableModel):
-    __tablename__ = 'esticazzi'
+    __tablename__ = 'record'
     __namespace__ = 'recordstorecoop'
     __table_args__= {"sqlite_autoincrement": True}
 
@@ -40,18 +40,17 @@ class Record(TableModel):
 
 class RecordStoreService(ServiceBase):
     @rpc(Record, _returns=Iterable(Record))
-    def get_record(ctx, rq): #rq stands for record query, a Record instance
+    def get_records(ctx, rq=None):
+        """rq stands for Record query, for matching"""
         q = ctx.udc.session.query(Record)
-        for val in ('title', 'author', 'genre', 'year'):
-            q.filter_by(**{val: rq.__getattribute__(val)}) #just dict unpacking
-        return q
-    
-    @rpc(_returns=Iterable(Record))
-    def get_all_records(ctx):
-        return ctx.udc.session.query(Record)
+        if rq:
+            for val in ('title', 'author', 'genre', 'year'):
+                q = q.filter_by(**{val: rq.__getattribute__(val)})
+        for record in q:
+            yield record
 
 class UserDefinedContext(object):
-    """Immagino si possa usare per limitare i privilegi. Inutile per ora."""
+    """Immagino si possa usare per limitare i privilegi. Inutile qui."""
     def __init__(self):
         self.session = Session()
 
