@@ -25,17 +25,17 @@ class TableModel(ComplexModelBase):
     __metadata__ = MetaData(bind=db)
 
 class Record(TableModel):
-    __tablename__ = 'record'
+    __tablename__ = 'esticazzi'
     __namespace__ = 'recordstorecoop'
     __table_args__= {"sqlite_autoincrement": True}
 
     id = UnsignedInteger32(pk=True)
-    title = Unicode(64)
-    author = Unicode(64)
-    genre = Unicode(64)
+    title = Unicode
+    author = Unicode
+    genre = Unicode
     year = UnsignedInteger32
-    thumbnail_url = Unicode(512)
-    description = Unicode(4096)
+    thumbnail_url = Unicode
+    description = Unicode
     quantity = UnsignedInteger32
 
 class RecordStoreService(ServiceBase):
@@ -87,7 +87,10 @@ if __name__=='__main__':
     
     from wsgiref.simple_server import make_server
     
-    port = int(sys.argv[1]) #[0] is __name__
+    if len(sys.argv) == 1: #no args passed: sys.argv[0] is __name__
+        port = 8000
+    else:
+        port = int(sys.argv[1])
     
     app = MyApplication([RecordStoreService], 'recordstorecoop', in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())
     wsgi_app = WsgiApplication(app)
