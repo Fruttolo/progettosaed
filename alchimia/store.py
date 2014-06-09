@@ -111,24 +111,19 @@ def _on_method_context_closed(ctx):
 class MyApplication(Application):
     def __init__(self, services, tns, name=None,
                                          in_protocol=None, out_protocol=None):
-        super(MyApplication, self).__init__(services, tns, name, in_protocol,
-                                                                 out_protocol)
+        super(MyApplication, self).__init__(services, tns, name, in_protocol, out_protocol)
 
         self.event_manager.add_listener('method_call', _on_method_call)
-        self.event_manager.add_listener("method_context_closed",
-                                                    _on_method_context_closed)
+        self.event_manager.add_listener("method_context_closed", _on_method_context_closed)
 
     def call_wrapper(self, ctx):
         try:
             return ctx.service_class.call_wrapper(ctx)
-
         except NoResultFound:
             raise ResourceNotFoundError(ctx.in_object)
-
         except Fault, e:
             logging.error(e)
             raise
-
         except Exception, e:
             logging.exception(e)
             raise InternalError(e)
@@ -160,6 +155,6 @@ if __name__=='__main__':
 
     TableModel.Attributes.sqla_metadata.create_all()
     logging.info("listening to http://127.0.0.1:{}".format(port))
-    logging.info("wsdl is at: http://localhost:{}/?wsdl".format(port))
+    logging.info("wsdl is at: http://127.0.0.1:{}/?wsdl".format(port))
 
     server.serve_forever()

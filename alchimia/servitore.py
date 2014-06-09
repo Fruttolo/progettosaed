@@ -5,31 +5,19 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///prova.db'
 db = SQLAlchemy(app)
 
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80))
-    email = db.Column(db.String(120))
-
-    def __init__(self, username, email):
-        self.username = username
-        self.email = email
+class Album(db.Model):
+    id = db.Column(db.String, primary_key=True)
+    author = db.Column(db.String)
+    title = db.Column(db.String)
+    genre = db.Column(db.String)
+    
+    def __init__(self, author, title, genre):
+        self.author = author
+        self.title = title
+        self.genre = genre
 
     def __repr__(self):
-        return '<User %r>' % self.username
-# class Album(db.Model):
-#     id = db.Column(db.String(10), primary_key=True)
-#     Author = db.Column(db.String(80))
-#     Title = db.Column(db.String(120))
-#     Genre = db.Column(db.String(50))
-
-
-#     def __init__(self, author, title, genre):
-#         self.Author = author
-#         self.Title = title
-#         self.Genre = genre
-#     def __repr__(self):
-#         return '<Album %r>' % self.title
+        return 'Album {}'.format(self.title)
 
 @app.route('/hello')
 def hello():
