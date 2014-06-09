@@ -1,18 +1,13 @@
 Cooperativa di negozi di musica
 
 Ci sono vari negozi di supporti fisici contenenti musica.
-Per ritardare il loro inevitabile fallimento decidono di fare un sito che permetta di browsare in un colpo solo tutti i loro database.
+Per ritardare il loro inevitabile fallimento decidono di fare un sito che permetta di browsare in un colpo solo tutti i loro database, semplificando così la vita ai possibili clienti.
 
-Va quindi implementato questo caso d'uso:
+Lo sviluppo del servizio va quindi implementato attorno a questo caso d'uso:
 
-Utente va sul sito unico, fa la ricerca
+- Utente va sul sito unico, fa la ricerca(per nome, o genere, o...)
+- Il sito chiede ai negozi, via SOAP
+- I negozi, dei servizi SOAP, rispondono
+- Il sito presenta i risultati della query all'utente
 
-Il sito passa via SOAP la ricerca ai singoli servizi negozio
-
-I servizi negozio rispondono
-
-Il sito presenta i risultati della query all'utente
-
-
-
-I negozianti devono poter aggiungere e rimuovere album dai loro database pollabili dal sito unico. Lo fanno attraverso un comando da console, per simulare il caso d'uso in cui questo comando venga aggiunto ad un infrastruttura di database già presente.
+I negozianti devono poter aggiungere e rimuovere album dai loro database. Lo fanno attraverso un comando da console, per simulare il caso in cui questo comando possa venire incollato su una preesistente infrastruttura di gestione del database.
