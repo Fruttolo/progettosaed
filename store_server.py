@@ -45,7 +45,10 @@ class RecordStoreService(ServiceBase):
         q = ctx.udc.session.query(Record)
         if rq:
             for val in ('title', 'author', 'genre', 'year'):
-                q = q.filter_by(**{val: rq.__getattribute__(val)})
+                print val, rq.__getattribute__(val)
+                for i in q: print i #HACK
+                if rq.__getattribute__(val):
+                    q = q.filter_by(**{val: rq.__getattribute__(val)})
         for record in q:
             yield record
 
