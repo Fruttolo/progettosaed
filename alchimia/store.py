@@ -1,34 +1,23 @@
-"""
-va fatto un client del negoziante con cui si interagisce con il database tramite le chiamate sotto
-poi va fatta una funzione che gestisce le query e le ritorna al servizio che poi le postera sul sito
-"""
-import os
 import logging
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger('spyne.protocol.xml').setLevel(logging.DEBUG)
 logging.getLogger('sqlalchemy.engine.base.Engine').setLevel(logging.DEBUG)
 
-from sqlalchemy import create_engine
-from sqlalchemy import MetaData
+from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 
-from spyne.application import Application
-from spyne.decorator import rpc
-from spyne.error import ResourceNotFoundError
-from spyne.protocol.soap import Soap11
-from spyne.model.primitive import Mandatory
-from spyne.model.primitive import Unicode
-from spyne.error import InternalError
+from spyne.error import InternalError, ResourceNotFoundError
+
+from spyne.model.primitive import Mandatory, Unicode, UnsignedInteger32
+from spyne.model.complex import Array, Iterable, ComplexModelBase, ComplexModelMeta
 from spyne.model.fault import Fault
-from spyne.model.complex import Array
-from spyne.model.complex import Iterable
-from spyne.model.complex import ComplexModelBase
-from spyne.model.complex import ComplexModelMeta
-from spyne.model.primitive import UnsignedInteger32
+
+from spyne.application import Application
+from spyne.protocol.soap import Soap11
+from spyne.decorator import rpc
 from spyne.server.wsgi import WsgiApplication
 from spyne.service import ServiceBase
-
 
 db = create_engine('sqlite:///prova.db')
 Session = sessionmaker(bind=db)
@@ -48,16 +37,7 @@ class Album(TableModel):
     year = UnsignedInteger32
     length = UnsignedInteger32
     thumbnail_url = Unicode
-    tracklist = Array(Unicode).store_as('table')
-
-######################################
-#CLIENT PART(REGISTERING TO SERVICE)
-##############################
-from suds.client import Client as SudsClient
-def register_service(shop_name, my_url):
-    srv_url = 'http://127.0.0.1:5000/soap/registrationservice?wsdl'
-    client = SudsClient(url=url, cache=None)
-    return client.service.register_shop(shop_name ,my_url)
+    tracklist = Array(Unicode)
 
 ################################################
 #WEB SERVICE DEFINITION
@@ -153,19 +133,33 @@ class MyApplication(Application):
             logging.exception(e)
             raise InternalError(e)
 
-if __name__=='__main__':
-    from wsgiref.simple_server import make_server
+######################################
+#CLIENT PART(REGISTERING TO SERVICE)
+##############################
+from suds.client import Client as SudsClient
+def register_service(shop_name, my_url):
+    srv_url = 'http://127.0.0.1:5000/soap/registrationservice?wsdl'
+    client = SudsClient(url=url, cache=None)
+    return client.service.register_shop(shop_name ,my_url)
 
+
+if __name__=='__main__':
+    import sys
+    
+    from wsgiref.simple_server import make_server
+    
+    port = int(sys.argv[1]) #[0] is __name__
+    
     application = MyApplication([RecordStoreService],
                 'spyne.recordstore',
                 in_protocol=Soap11(validator='lxml'),
                 out_protocol=Soap11(),)
 
     wsgi_app = WsgiApplication(application)
-    server = make_server('127.0.0.1', 8000, wsgi_app)
+    server = make_server('127.0.0.1', port, wsgi_app)
 
     TableModel.Attributes.sqla_metadata.create_all()
-    logging.info("listening to http://127.0.0.1:8000")
-    logging.info("wsdl is at: http://localhost:8000/?wsdl")
+    logging.info("listening to http://127.0.0.1:{}".format(port))
+    logging.info("wsdl is at: http://localhost:{}/?wsdl".format(port))
 
     server.serve_forever()
