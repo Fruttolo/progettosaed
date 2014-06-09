@@ -1,4 +1,4 @@
-"""INUTILE. Look away.
+"""USELESS. Just make some aliases for sqlite3.
 
 Storeowner utilities.
 
