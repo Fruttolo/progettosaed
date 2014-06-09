@@ -9,15 +9,26 @@ si mette a rispondere alle query.
 
 from flask import Flask
 from flask import render_template
+from flask import request
 
 import query
 
 app = Flask(__name__)
+@app.route('/index')
+def index():
+	return render_template('service.html', rv=None)
 
-@app.route('/index') #@app.route('/cane/?<query>')
-def service():
-    rv = query.get_records();
-    return render_template('service.html', rv=rv)
+@app.route('/index', methods=['POST']) 
+def search():
+	#if bruttissimo ma altrimenti c'e un conflitto tra tipi in caso di form lasciato vuoto
+	year = request.form['year']
+	if year == '':
+		year = None
+	price = request.form['price']
+	if price == '':
+		price = None
+	rv = query.get_records(title=request.form['title'],author=request.form['author'],year=year,genre=request.form['genre'],price=price);
+	return render_template('service.html', rv=rv)
 
 if __name__ == '__main__':
     import sys

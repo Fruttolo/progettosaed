@@ -69,7 +69,7 @@
 		width: 100%;
 		background-color: lightblue;
 		color: white;
-		font-family: Georgia;
+		font-family: Impact;
 		font-style: bold;
 		font-size: 1em;
 		text-align: center;	
@@ -90,8 +90,13 @@
 		display: inline-block;
 	}
 	.form{
-		border-bottom: 3px dotted black;
+		border-bottom: 3px dotted grey;
 		margin-bottom: 1em;
+	}
+	.searchfield{
+		float: left;
+		width: 30%;
+		padding-left: 10px;
 	}
 
 </style>
@@ -104,15 +109,34 @@
 	<div class="container">
 
 		<div class="subheader">
-			Search:
-			<form class="form" method="POST">
+			<form class='form' method="POST" action={{url_for('search')}} style="padding-bottom: 10px">
+				<fieldset>
+				<legend>Search:</legend>
+				<div class="searchfield">
+				author:
 				<input type="text" name="author"/>
+				<br>title:
 				<input type="text" name="title"/>
-				<input type="submit" name="search" style="margin-bottom: 1em"/>
-			</form>
-			Results: 
+				<br>year:
+				<input type="text" name="year"/>
+				</div>
+				<div class="searchfield">
+				genre:
+				<input type="text" name="genre"/>
+				<br>price:
+				<input type="text" name="price"/>
+				&nbsp;
+				<br>
+				<input type="submit" name="search" style="margin-bottom: 1em" value="Cerca"/>
+				</div>
+				</fieldset>
+			</form>	
 		</div>
-
+		<div>
+			{{s}}
+		</div>
+		{% if rv != none %}
+		<span>Results: </span>
 		<ul class="list">
 		{% for y in rv %}
 			{% for i in y[1] %}
@@ -133,7 +157,7 @@
 			{% endfor %}
 		{% endfor %}
 		</ul>
-
+		{% endif %}
 	</div>
 	
 	<div class="footer">Luca Casini - Francesco Mastellone © 2014</div>
