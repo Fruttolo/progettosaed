@@ -37,7 +37,7 @@ DETTAGLI D'IMPLEMENTAZIONE:
 Che dati contiene un Record?
     Vedere store_server.py
 
-records.db contiene già un album di prova.
+records.db è già popolato con 3 album.
 
 TODO: implementare il ristabilimento delle connessioni agli store
 
