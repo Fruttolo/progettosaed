@@ -30,10 +30,9 @@ from spyne.server.wsgi import WsgiApplication
 from spyne.service import ServiceBase
 
 
-db = create_engine('sqlite:///'+os.path.dirname(os.path.realpath(__file__))+'/prova.db')
+db = create_engine('sqlite:///prova.db')
 Session = sessionmaker(bind=db)
 
-# This is what calling TTableModel does. This is here for academic purposes.
 class TableModel(ComplexModelBase):
     __metaclass__ = ComplexModelMeta
     __metadata__ = MetaData(bind=db)
@@ -44,12 +43,12 @@ class Album(TableModel):
     __table_args__= {"sqlite_autoincrement": True}
 
     id = UnsignedInteger32(pk=True)
-    title = Unicode(128)
-    author = Unicode(128)
-    lenght = UnsignedInteger32
-    tracks = UnsignedInteger32
-    genre = Unicode(64)
-    label = Unicode(64)
+    title = Unicode
+    author = Unicode
+    year = UnsignedInteger32
+    length = UnsignedInteger32
+    thumbnail_url = Unicode
+    tracklist = Array(Unicode).store_as('table')
 
 ######################################
 #CLIENT PART(REGISTERING TO SERVICE)
