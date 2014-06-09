@@ -26,9 +26,9 @@ class TableModel(ComplexModelBase):
     __metaclass__ = ComplexModelMeta
     __metadata__ = MetaData(bind=db)
 
-class Album(TableModel):
-    __tablename__ = 'album'
-    __namespace__ = 'spyne.recordstore.album'
+class Record(TableModel):
+    __tablename__ = 'record'
+    __namespace__ = 'spyne.recordstore.record'
     __table_args__= {"sqlite_autoincrement": True}
 
     id = UnsignedInteger32(pk=True)
@@ -39,61 +39,20 @@ class Album(TableModel):
     thumbnail_url = Unicode
     tracklist = Array(Unicode)
 
-################################################
-#WEB SERVICE DEFINITION
-################################################
 class RecordStoreService(ServiceBase):
-    """
-    all query are pretty useless except get_all_album, TODO: useful things...
-    """
-    @rpc(Mandatory.UnsignedInteger32, _returns=Album)
-    def get_album(ctx, user_id):
+    @rpc(Mandatory.UnsignedInteger32, _returns=Record)
+    def get_record(ctx, user_id):
         """
         gets album by id
         """
-        return ctx.udc.session.query(Album).filter_by(id=album_id).one()
-
-    @rpc(Album, _returns=UnsignedInteger32)
-    def put_album(ctx, album):
-        """
-        add an album to the database and returns his id
-        """        
-        if album.id is None:
-            ctx.udc.session.add(album)
-            ctx.udc.session.flush() # so that we get the album.id value
-
-        else:
-            if ctx.udc.session.query(Album).get(album.id) is None:
-                # this is to prevent the client from setting the primary key
-                # of a new object instead of the database's own primary-key
-                # generator.
-                # Instead of raising an exception, you can also choose to
-                # ignore the primary key set by the client by silently doing
-                # album.id = None
-                raise ResourceNotFoundError('album.id=%d' % album.id)
-
-            else:
-                ctx.udc.session.merge(album)
-
-        return album.id
-
-    @rpc(Mandatory.UnsignedInteger32)
-    def del_album(ctx, album_id):
-        """http://www.python.so/
-        removes an album from the database if one with the provided id exist
-        """
-        count = ctx.udc.session.query(User).filter_by(id=user_id).count()
-        if count == 0:
-            raise ResourceNotFoundError(user_id)
-
-        ctx.udc.session.query(User).filter_by(id=user_id).delete()
+        return ctx.udc.session.query(Record).filter_by(id=album_id).one()
     
-    @rpc(_returns=Iterable(Album))
-    def get_all_album(ctx):
+    @rpc(_returns=Iterable(Record))
+    def get_all_records(ctx):
         """
         returns an Iterable with all albums in the database
         """
-        return ctx.udc.session.query(Album)
+        return ctx.udc.session.query(Record)
 
 
 class UserDefinedContext(object):
@@ -127,16 +86,6 @@ class MyApplication(Application):
         except Exception, e:
             logging.exception(e)
             raise InternalError(e)
-
-######################################
-#CLIENT PART(REGISTERING TO SERVICE)
-##############################
-from suds.client import Client as SudsClient
-def register_service(shop_name, my_url):
-    srv_url = 'http://127.0.0.1:5000/soap/registrationservice?wsdl'
-    client = SudsClient(url=url, cache=None)
-    return client.service.register_shop(shop_name ,my_url)
-
 
 if __name__=='__main__':
     import sys
