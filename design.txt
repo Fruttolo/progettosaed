@@ -9,7 +9,7 @@ in un terminale:
 in un altro:
     python2 service.py 5000
 in un browser:
-    localhost 127.0.0.1:5000/index.html
+    localhost 127.0.0.1:5000/index
 
 store_server può partire sulla porta che vuole ma service va a cercare gli store dove dice shops.json: in localhost:8000 ed 8001
 
