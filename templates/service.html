@@ -1,166 +1,66 @@
 <html>
 <head>
-<title>record store browser</title>
-<style>
-	body{
-		background-color: lightgrey;	
-	}
-	.body{
-		position: absolute;
-		height: 100%;
-		width: 100%;
-		top: 0;
-		left: 0;
-		}
-	.container{
-		display: table;
-		background-color: white;
-		text-align: center;
-		margin-top: 3.5em;
-		margin-left: 20%;
-		height: 100%;
-		width: 55%;
-		box-shadow: 1px 3px 3px 0px #888;
-	}
-	.header{
-		position: fixed;
-		z-index: 3;
-		background-color: lightblue;
-		color: white;
-		width: 100%;
-		margin-bottom: 1%;
-		font-family: Georgia;
-		font-style: bold;
-		font-size: 3em;
-		text-align: center;
-		box-shadow: 1px 3px 3px 0px #888;
-	}
-	.list{
-		background-color: yellow;
-	}
-	.element{
-		float: left;
-		display: table-cell;	
-		width: 170px;
-		height: auto;
-		text-align: left;
-		margin: 5px;
-		border: 1px dotted lightblue;
-		border-radius: 3px;
-	}
-	.title{
-		margin-left: .3em;
-		text-align: center;
-		font-family: sans;
-		color: black;
-		font-weight: 10;
-		font-size: 14;
-	}
-	.info{
-		padding: .3em;
-		color: grey;
-		font-weight: 4;
-		font-style: italic;
-		font-size: 12;
-	}
-	.footer{
-		position: relative;
-		bottom: 0px;
-		width: 100%;
-		background-color: lightblue;
-		color: white;
-		font-family: Impact;
-		font-style: bold;
-		font-size: 1em;
-		text-align: center;	
-	}
-	.thumbnail{
-		text-align: center;
-		padding: 10px;
-		height: 150px;
-		width: 150px;
-		float: left;
-	}
-	.subheader{
-		text-align: left;x
-		padding-left: 3em;
-		padding-right: 3em;
-		width: 80%;
-		margin-top: 1em; 
-		display: inline-block;
-	}
-	.form{
-		border-bottom: 3px dotted grey;
-		margin-bottom: 1em;
-	}
-	.searchfield{
-		float: left;
-		width: 30%;
-		padding-left: 10px;
-	}
-
-</style>
+    <title>RecordStoreCoop</title>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <div class="body">
-	
-	<div class="header">Record Store Browser</div>
-	
-	<div class="container">
+    <div class="header"><h1>RecordStoreCoop</h1></div>
+    <div class="container">
 
-		<div class="subheader">
-			<form class='form' method="POST" action={{url_for('search')}} style="padding-bottom: 10px">
-				<fieldset>
-				<legend>Search:</legend>
-				<div class="searchfield">
-				author:
-				<input type="text" name="author"/>
-				<br>title:
-				<input type="text" name="title"/>
-				<br>year:
-				<input type="text" name="year"/>
-				</div>
-				<div class="searchfield">
-				genre:
-				<input type="text" name="genre"/>
-				<br>price:
-				<input type="text" name="price"/>
-				&nbsp;
-				<br>
-				<input type="submit" name="search" style="margin-bottom: 1em" value="Cerca"/>
-				</div>
-				</fieldset>
-			</form>	
-		</div>
-		<div>
-			{{s}}
-		</div>
-		{% if rv != none %}
-		<span>Results: </span>
-		<ul class="list">
-		{% for y in rv %}
-			{% for i in y[1] %}
-				<li class="element">
-					<span class="title">{{i.title}}</span>
-					<br/>
-					<span class="info">{{i.author}}</span>
-					<br/>
-					<span class="info">prezzo: {{i.price}}€</span>
-					<br/>
-					{% if i.quantity == 0 %}
-						<span class="info" style="color: red">Non Disponibile!</span>
-					{% else %}
-						<span class="info" style="color: #3a3">Disponibile: {{i.quantity}}</span>
-					{% endif %}					
-					<img class="thumbnail" src="{{i.thumbnail_url}}"/>
-				</li>
-			{% endfor %}
-		{% endfor %}
-		</ul>
-		{% endif %}
-	</div>
-	
-	<div class="footer">Luca Casini - Francesco Mastellone © 2014</div>
+        <div class="subheader">
+            <form class='form' method="POST" action={{url_for('search')}} style="padding-bottom: 10px">
+                <fieldset>
+                <legend>Search:</legend>
+                <div class="searchfield">
+                author:
+                <input type="text" name="author"/>
+                <br>title:
+                <input type="text" name="title"/>
+                <br>year:
+                <input type="text" name="year"/>
+                </div>
+                <div class="searchfield">
+                genre:
+                <input type="text" name="genre"/>
+                <br>price:
+                <input type="text" name="price"/>
+                &nbsp;
+                <br>
+                <input type="submit" name="search" style="margin-bottom: 1em" value="Cerca"/>
+                </div>
+                </fieldset>
+            </form>	
+        </div>
+        <div>
+            {{s}}
+        </div>
+        {% if rv != none %}
+        <span>Results: </span>
+        <ul class="list">
+        {% for y in rv %}
+            {% for i in y[1] %}
+                <li class="element">
+                    <span class="title">{{i.title}}</span>
+                    <br/>
+                    <span class="info">{{i.author}}</span>
+                    <br/>
+                    <span class="info">prezzo: {{i.price}}€</span>
+                    <br/>
+                    {% if i.quantity == 0 %}
+                        <span class="info" style="color: red">Non Disponibile!</span>
+                    {% else %}
+                        <span class="info" style="color: #3a3">Disponibile: {{i.quantity}}</span>
+                    {% endif %}					
+                    <img class="thumbnail" src="{{i.thumbnail_url}}"/>
+                </li>
+            {% endfor %}
+        {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    
+    <div class="footer">Luca Casini - Francesco Mastellone © 2014</div>
 
 </div>
 </body>
