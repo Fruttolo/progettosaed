@@ -36,7 +36,8 @@
 		box-shadow: 1px 3px 3px 0px #888;
 	}
 	.list{
-		background-color: yellow;
+		background-color: #efefef;
+		float: left;
 	}
 	.element{
 		float: left;
@@ -69,7 +70,7 @@
 		width: 100%;
 		background-color: lightblue;
 		color: white;
-		font-family: Impact;
+		font-family: Georgia;
 		font-style: bold;
 		font-size: 1em;
 		text-align: center;	
@@ -82,10 +83,10 @@
 		float: left;
 	}
 	.subheader{
-		text-align: left;x
+		text-align: left;
 		padding-left: 3em;
 		padding-right: 3em;
-		width: 80%;
+		width: 90%;
 		margin-top: 1em; 
 		display: inline-block;
 	}
@@ -125,38 +126,36 @@
 				<input type="text" name="genre"/>
 				<br>price:
 				<input type="text" name="price"/>
-				&nbsp;
-				<br>
+				<br>&nbsp;<br>
 				<input type="submit" name="search" style="margin-bottom: 1em" value="Cerca"/>
 				</div>
 				</fieldset>
 			</form>	
 		</div>
-		<div>
-			{{s}}
-		</div>
+
 		{% if rv != none %}
-		<span>Results: </span>
-		<ul class="list">
-		{% for y in rv %}
-			{% for i in y[1] %}
-				<li class="element">
-					<span class="title">{{i.title}}</span>
-					<br/>
-					<span class="info">{{i.author}}</span>
-					<br/>
-					<span class="info">prezzo: {{i.price}}€</span>
-					<br/>
-					{% if i.quantity == 0 %}
-						<span class="info" style="color: red">Non Disponibile!</span>
-					{% else %}
-						<span class="info" style="color: #3a3">Disponibile: {{i.quantity}}</span>
-					{% endif %}					
-					<img class="thumbnail" src="{{i.thumbnail_url}}"/>
-				</li>
+			<div style="float: left; padding-left: 1em;">Results: </div>
+			<br>
+			{% for y in rv %}
+					{% set store_number = loop %}
+					<div style="float: left; padding: 1em; display: block;">Store {{store_number.index}} </div>
+					<ul class="list">
+						{% for i in y[1] %}
+							<li class="element">
+								<span class="title">{{i.title}}</span><br>
+								<span class="info">{{i.author}}</span><br>
+								<span class="info">prezzo: {{i.price}}€</span><br>
+								{% if i.quantity == 0 %}
+									<span class="info" style="color: red">Non Disponibile!</span>
+								{% else %}
+									<span class="info" style="color: #3a3">Disponibile: {{i.quantity}}</span>
+								{% endif %}					
+								<img class="thumbnail" src="{{i.thumbnail_url}}"/>
+							</li>
+						{% endfor %}
+					</ul>
+
 			{% endfor %}
-		{% endfor %}
-		</ul>
 		{% endif %}
 	</div>
 	
