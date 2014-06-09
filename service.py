@@ -14,11 +14,14 @@ import query
 
 app = Flask(__name__)
 
-@app.route('/cane') #@app.route('/cane/?<query>')
+@app.route('/index.html') #@app.route('/cane/?<query>')
 def cane():
     rv = query.get_all_records();
     return render_template('service.html', rv=rv)
 
 if __name__ == '__main__':
+    import sys
+    port = int(sys.argv[1]) #[0] is __name__
+    
     app.debug = True
-    app.run(port = 5000)
+    app.run(port=port)

@@ -37,13 +37,16 @@ class Record(TableModel):
     genre = Unicode
     year = Integer
     thumbnail_url = Unicode
-    tracklist = Array(Unicode)
+    description = Unicode
+    quantity = Integer
 
 class RecordStoreService(ServiceBase):
     @rpc(Record, _returns=Array(Record))
     def get_record(ctx, rq): #rq stands for record query, a Record instance
-        #ctx.udc.session.query(Record).filter_by(id=album_id).one()
-        raise ResourceNotFoundError #TODO implement this shit
+        q = ctx.udc.session.query(Record)
+        for val in ('title', 'author', 'genre', 'year'):
+            q.filter_by(**{val: rq.__getattribute__(val)}) #just dict unpacking
+        return q
     
     @rpc(_returns=Array(Record))
     def get_all_records(ctx):

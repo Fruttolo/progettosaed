@@ -1,5 +1,15 @@
 Cooperativa di negozi di musica
 
+ESEMPIO D'UTILIZZO:
+in una console:
+    python2 store_server.py 8000
+in un'altra:
+    python2 service.py 5000
+in un browser:
+    localhost 127.0.0.1:5000/index.html
+
+store_server può partire sulla porta che vuole ma poi service va a cercarlo sempre dove dice shops.json: localhost:8000
+
 Ci sono vari negozi di supporti fisici contenenti musica.
 Per ritardare il loro inevitabile fallimento decidono di fare un sito che permetta di browsare in un colpo solo tutti i loro database, semplificando così la vita ai possibili clienti.
 
@@ -19,5 +29,5 @@ Descrizione dei moduli, fra parentesi le librerie utilizzate:
     Il modulo che fa la richiesta SOAP (suds)
 - store.py
     Il servizio SOAP (spyne)
-- database.py
-    Le utility per i commercianti (SQLAlchemy)
+
+Che dati contiene un Record: vedere store_server.py
