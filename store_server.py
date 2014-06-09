@@ -8,18 +8,16 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 
 from spyne.error import InternalError, ResourceNotFoundError
-
-from spyne.model.primitive import Integer, Unicode
-from spyne.model.complex import Array, Iterable, ComplexModelBase, ComplexModelMeta
+from spyne.model.primitive import UnsignedInteger32, Unicode
+from spyne.model.complex import Iterable, ComplexModelBase, ComplexModelMeta
 from spyne.model.fault import Fault
-
-from spyne.application import Application
 from spyne.protocol.soap import Soap11
 from spyne.decorator import rpc
-from spyne.server.wsgi import WsgiApplication
 from spyne.service import ServiceBase
+from spyne.application import Application
+from spyne.server.wsgi import WsgiApplication
 
-db = create_engine('sqlite:///prova.db')
+db = create_engine('sqlite:///records.db')
 Session = sessionmaker(bind=db)
 
 class TableModel(ComplexModelBase):
@@ -28,31 +26,32 @@ class TableModel(ComplexModelBase):
 
 class Record(TableModel):
     __tablename__ = 'record'
-    __namespace__ = 'recordstorecoop.record'
+    __namespace__ = 'recordstorecoop'
     __table_args__= {"sqlite_autoincrement": True}
 
     id = UnsignedInteger32(pk=True)
-    title = Unicode
-    author = Unicode
-    genre = Unicode
-    year = Integer
-    thumbnail_url = Unicode
-    description = Unicode
-    quantity = Integer
+    title = Unicode(64)
+    author = Unicode(64)
+    genre = Unicode(64)
+    year = UnsignedInteger32
+    thumbnail_url = Unicode(512)
+    description = Unicode(4096)
+    quantity = UnsignedInteger32
 
 class RecordStoreService(ServiceBase):
-    @rpc(Record, _returns=Array(Record))
+    @rpc(Record, _returns=Iterable(Record))
     def get_record(ctx, rq): #rq stands for record query, a Record instance
         q = ctx.udc.session.query(Record)
         for val in ('title', 'author', 'genre', 'year'):
             q.filter_by(**{val: rq.__getattribute__(val)}) #just dict unpacking
         return q
     
-    @rpc(_returns=Array(Record))
+    @rpc(_returns=Iterable(Record))
     def get_all_records(ctx):
         return ctx.udc.session.query(Record)
 
 class UserDefinedContext(object):
+    """Immagino si possa usare per limitare i privilegi. Inutile per ora."""
     def __init__(self):
         self.session = Session()
 
@@ -91,11 +90,12 @@ if __name__=='__main__':
     port = int(sys.argv[1]) #[0] is __name__
     
     app = MyApplication([RecordStoreService], 'recordstorecoop', in_protocol=Soap11(validator='lxml'), out_protocol=Soap11())
-    server = make_server('127.0.0.1', port, WsgiApplication(app))
+    wsgi_app = WsgiApplication(app)
+    server = make_server('localhost', port, wsgi_app)
 
     TableModel.Attributes.sqla_metadata.create_all()
     
-    logging.info("listening to http://127.0.0.1:{}".format(port))
-    logging.info("wsdl is at: http://127.0.0.1:{}/?wsdl".format(port))
+    logging.info("listening to http://localhost:{}".format(port))
+    logging.info("wsdl is at: http://localhost:{}/?wsdl".format(port))
 
     server.serve_forever()

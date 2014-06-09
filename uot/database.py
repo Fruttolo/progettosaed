@@ -64,13 +64,10 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
     
-    bello = Record()
-    session = Session()
-    session.add(bello)
+    #bello = Record()
+    #session = Session()
+    #session.add(bello)
     
     
-    voglio = session.query(Giorgio).filter_by(title='cock').first()
-    print(voglio)
-
-def add_record():
-    pass
+    #voglio = session.query(Giorgio).filter_by(title='cock').first()
+    #print(voglio)

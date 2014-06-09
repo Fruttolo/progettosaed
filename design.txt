@@ -8,7 +8,7 @@ in un'altra:
 in un browser:
     localhost 127.0.0.1:5000/index.html
 
-store_server può partire sulla porta che vuole ma poi service va a cercarlo sempre dove dice shops.json: localhost:8000
+store_server può partire sulla porta che vuole ma poi service va a cercarlo sempre dove dice shops.json ovvero a localhost:8000
 
 Ci sono vari negozi di supporti fisici contenenti musica.
 Per ritardare il loro inevitabile fallimento decidono di fare un sito che permetta di browsare in un colpo solo tutti i loro database, semplificando così la vita ai possibili clienti.
@@ -31,3 +31,5 @@ Descrizione dei moduli, fra parentesi le librerie utilizzate:
     Il servizio SOAP (spyne)
 
 Che dati contiene un Record: vedere store_server.py
+
+records.db contiene già un album di prova.
