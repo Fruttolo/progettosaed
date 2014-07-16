@@ -56,6 +56,19 @@ class RecordStoreService(ServiceBase):
         for record in q:
             yield record
 
+class UserDefinedContext(object):
+    """Immagino si possa usare per limitare i privilegi. Inutile qui."""
+    def __init__(self):
+        self.session = Session()
+
+def _on_method_call(ctx):
+    ctx.udc = UserDefinedContext()
+
+def _on_method_context_closed(ctx):
+    if ctx.udc is not None:
+        ctx.udc.session.commit()
+        ctx.udc.session.close()
+        
 class MyApplication(Application):
     def __init__(self, services, tns, name=None, in_protocol=None, out_protocol=None):
         super(MyApplication, self).__init__(services, tns, name, in_protocol, out_protocol)
