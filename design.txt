@@ -1,35 +1,38 @@
-Cooperativa di Negozi di Musica
+Negozi di Dischi Online
 
-Immaginiamo vari negozi di supporti fisici contenenti musica.
-Per ritardare il loro inevitabile fallimento, decidono di unificare le API dei loro siti, rendendole fruibili da un sito unico che permetta di scorrere in un colpo solo tutti i loro cataloghi, semplificando così la vita, e soprattutto l'acquisto, ai possibili clienti.
+Immaginiamo un Negozio Online con uno o più magazzini sul territorio.
+I magazzini possono gestire autonomamente l'inventario e il sito si collega ad essi per reperire le informazioni sui prodotti disponibili.
 
 DIMOSTRAZIONE D'UTILIZZO:
 in un terminale:
-    python2 store_server.py 8000 od 8001
-in un altro:
-    python2 service.py 5000
+    ./magazzino1(o anche magazzino2)/python2 soap_server.py 8000 od 8001
+in un secondo terminale:
+    ./magazzino1/python2 control_panel.py
+in un terzo:
+     python2 service.py 5000
 in un browser:
     localhost 127.0.0.1:5000/index
+        -a questo indirizzo troveremo il servizio
+    localhost 127.0.0.1:6666/admin
+        -a questo indirizzo troveremo il pannello di controllo
 
-store_server può partire sulla porta che vuole ma service va a cercare gli store dove dice shops.json: in localhost:8000 ed 8001
+soap_server può partire sulla porta che vuole ma service va a cercare gli store dove dice warehouse.json: in localhost:8000 ed 8001
 
 Caso d'uso:
     - Utente va sul sito unico, fa la ricerca(per nome, o genere, o...)
-    - Il sito chiede ai negozi, via SOAP
-    - I negozi, dei servizi SOAP, rispondono
+    - Il sito chiede ai magazzini, via SOAP
+    - I magazzini, dei servizi SOAP, rispondono
     - Il sito presenta i risultati della query all'utente
-
-Si presume che i negozianti abbiano già un sistema di gestione dei loro database e che nell'aderire all'iniziativa abbiano già, alternativamente:
-    - uniformato i loro schemi a quello unico
-    - esposto perlomeno la stessa API SOAP
 
 Descrizione dei moduli: (fra parentesi le librerie usate)
 - service.py
     L'interfaccia web (Flask) con cui vengono prodotte le query
 - query.py
     Il modulo che fa la richiesta SOAP (suds)
-- store_server.py
+- soap_server.py
     Il servizio SOAP (spyne)
+- control_panel.py
+    il pannello di controllo (flask-admin)
 
 
 
@@ -37,7 +40,7 @@ DETTAGLI D'IMPLEMENTAZIONE:
 Che dati contiene un Record?
     Vedere store_server.py
 
-records.db è già popolato con 3 album.
+records.db è già popolato con alcuni album.
 
 TODO: implementare il ristabilimento delle connessioni agli store
 
