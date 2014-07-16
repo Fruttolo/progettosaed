@@ -1,11 +1,11 @@
-"""Modulo che implementa il servizio unificato.
+"""
+Modulo che implementa il servizio unificato.
 
-Carica una lista dei negozi aderenti all'iniziativa,
-cerca di connettervisi,
-si mette a rispondere alle query.
+Carica una lista di magazzini e tenta di connettervisi.
+Invia una query con i parametri ricevuti dal form di ricerca.
+Ottiene un array di oggetti e li mostra al cliente.
 
 """
-
 
 from flask import Flask
 from flask import render_template
@@ -21,7 +21,6 @@ def index():
 
 @app.route('/index', methods=['POST']) 
 def search():
-	#if bruttissimo ma altrimenti c'e un conflitto tra tipi in caso di form lasciato vuoto
 	year = request.form['year']
 	if year == '':
 		year = None
@@ -34,6 +33,5 @@ def search():
 if __name__ == '__main__':
     import sys
     port = int(sys.argv[1]) #[0] is __name__
-    
     #app.debug = True
     app.run(port=port,debug=True)
