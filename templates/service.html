@@ -1,67 +1,236 @@
 <html>
 <head>
-    <title>RecordStoreCoop</title>
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<link href='http://fonts.googleapis.com/css?family=PT+Serif:400,700' rel='stylesheet' type='text/css'>
+<title>Record Store Browser</title>
+<style>
+  body{
+		background-color: #e0e0a0;	
+	}
+	.body{
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		top: 0;
+		left: 0;
+		}
+	.container{
+		display: table;
+		background-color: white;
+		text-align: center;
+		margin-top: 3.5em;
+		margin-left: auto;
+		margin-right: auto;
+		height: 100%;
+		width: 62%;
+		box-shadow: 0px 3px 3px 0px #888;
+	}
+	.header{
+		position: fixed;
+		z-index: 3;
+		background-color: #7ad6eb;
+		color: white;
+		width: 100%;
+		margin-bottom: 1%;
+		font-family: PT Serif;
+		font-weight: 700;
+		font-size: 3em;
+		text-align: center;husker du zen arcade
+		box-shadow: 0px 3px 3px 0px #888;
+	}
+	.list{
+		background-color: #efefef;
+		float: left;
+		width: 90%;
+		margin-left: 2.5%;
+		border-radius: 1em
+	}
+	.element{
+		float: left;
+		display: table-cell;	
+		width: 170px;
+		height: auto;
+		text-align: left;
+		margin-top: 3%;
+		margin-left: auto;
+		border: 1px dotted darkred;
+		border-radius: 3px;
+	}
+	.title{
+		margin-left: .3em;
+		text-align: center;
+		font-family: sans;
+		color: black;
+		font-size: 12;
+		font-weight: 400;
+	}
+	.info{
+		padding: .3em;
+		color: grey;
+		font-weight: 4;
+		font-style: italic;
+		font-size: 12;
+	}
+	.footer{
+		position: relative;
+		bottom: 0px;
+		width: 100%;
+		background-color: #fca08b;
+		color: white;
+		font-family: Georgia;
+		font-style: bold;
+		font-size: 1em;
+		text-align: center;	
+	}
+	.thumbnail{
+		text-align: center;
+		padding: 10px;
+		height: 150px;
+		width: 150px;
+		float: left;
+	}
+	.subheader{
+		text-align: left;
+		padding-left: 3em;
+		padding-right: 3em;
+		width: 90%;
+		margin-top: 1em; 
+		display: inline-block;
+	}
+	.form{
+		border-bottom: 3px dotted grey;
+		margin-bottom: 1em;
+		
+	}
+	.searchfield{
+		float: left;
+		width: auto;
+		padding-left: 10px;
+	}
+ .buy{
+ 	margin: 0px;
+ }
+</style>
 </head>
 <body>
 <div class="body">
-    <div class="header"><h1>RecordStoreCoop</h1></div>
-    <div class="container">
+	
+	<div class="header">Record Store Browser</div>
+	
+	<div class="container">
 
-        <div class="subheader">
-            <form class='form' method="POST" action={{url_for('search')}} style="padding-bottom: 10px">
+		<div class="subheader">
+			<form class='form' method="POST" action={{url_for('search')}} style="padding-bottom: 10px">
+				<fieldset>
+					<legend>Search:</legend>
+					<div class="searchfield">
+					Autore:<br>
+					<input type="text" name="author"/>
+					<br>Titolo:<br>
+					<input type="text" name="title"/>
+					<br>Anno:<br>
+					<input type="text" name="year"/>
+					</div>
+					<div class="searchfield">
+					Genere:<br>
+					<input type="text" name="genre"/>
+					<br>Prezzo:<br>
+					<input type="text" name="price"/>
+					<br>&nbsp;<br>
+					<input type="submit" name="search" style="margin-bottom: 1em" value="Cerca"/>
+					</div>
+				</fieldset>
+			</form>	
+            <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" class="last">
                 <fieldset>
-                <legend>Search:</legend>
-                <div class="searchfield">
-                author:
-                <input type="text" name="author"/>
-                <br>title:
-                <input type="text" name="title"/>
-                <br>year:
-                <input type="text" name="year"/>
-                </div>
-                <div class="searchfield">
-                genre:
-                <input type="text" name="genre"/>
-                <br>price:
-                <input type="text" name="price"/>
-                &nbsp;
-                <br>
-                <input type="submit" name="search" style="margin-bottom: 1em" value="Cerca"/>
-                </div>
+                    <input type="hidden" name="business" value="example@minicartjs.com" />
+                    <input type="hidden" name="cmd" value="_cart" />
+                    <input type="hidden" name="display" value="1" />
+                    <input type="submit" name="submit" value="View your cart" class="button" />
                 </fieldset>
-            </form>	
-        </div>
-        <div>
-            {{s}}
-        </div>
-        {% if rv != none %}
-        <span>Results: </span>
-        <ul class="list">
-        {% for y in rv %}
-            {% for i in y[1] %}
-                <li class="element">
-                    <span class="title">{{i.title}}</span>
-                    <br/>
-                    <span class="info">{{i.author}}</span>
-                    <br/>
-                    <span class="info">prezzo: {{i.price}}€</span>
-                    <br/>
-                    {% if i.quantity == 0 %}
-                        <span class="info" style="color: red">Non Disponibile!</span>
-                    {% else %}
-                        <span class="info" style="color: #3a3">Disponibile: {{i.quantity}}</span>
-                    {% endif %}					
-                    <img class="thumbnail" src="{{i.thumbnail_url}}"/>
-                </li>
-            {% endfor %}
-        {% endfor %}
-        </ul>
-        {% endif %}
-    </div>
-    
-    <div class="footer">Luca Casini - Francesco Mastellone © 2014</div>
+            </form>
+		</div>
 
+		{% if rv != none %}
+			<div style="float: left; padding-left: 1em;">Risultati: </div>
+			<br>
+			<ul class="list">
+			{% for y in rv %}
+				{% for i in y[1]|sort(attribute="author") %}			
+						<!---DEBUG
+            <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+                <fieldset>
+                    <input type="hidden" name="cmd" value="_cart" />
+                    <input type="hidden" name="add" value="1" />
+                    <input type="hidden" name="business" value="example@minicartjs.com" />
+                    <input type="hidden" name="item_name" value="{{i.title}}" />
+                    <input type="hidden" name="amount" value="{{i.price}}" />
+                    <input type="hidden" name="discount_amount" value="1.00" />
+                    <input type="hidden" name="currency_code" value="EUR" />
+                    <input type="hidden" name="return" value="http://www.minicartjs.com/?success" />
+                    <input type="hidden" name="cancel_return" value="http://www.minicartjs.com/?cancel" />
+                    <strong>{{i.title}}</strong>
+                    <ul>
+                        <li>Price €{{i.price}}</li>
+                        <li>Discounted $1.00</li>
+                    </ul>
+                    <input type="submit" name="submit" value="Add to cart" class="button" />
+                </fieldset>
+            </form>
+ DEBUG-->
+						<li class="element">
+							<span class="title">{{i.title}}</span><br>
+							<span class="info">{{i.author}}</span><br>
+							<span class="info">prezzo: {{i.price}}€</span><br>
+							{% if i.quantity == 0 %}
+								<span class="info" style="color: red">Non Disponibile!</span>
+								<form class="buy" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+								<fieldset style="border: 0px">
+				                    <input type="hidden" name="cmd" value="_cart" />
+				                    <input type="hidden" name="add" value="1" 
+				                    <input type="hidden" name="business" value="example@minicartjs.com" />
+				                    <input type="hidden" name="item_name" value="{{i.title}}" />
+				                    <input type="hidden" name="amount" value="{{i.price}}" />
+				                    <input type="hidden" name="discount_amount" value="0.00" />
+				                    <input type="hidden" name="currency_code" value="EUR" />
+				                    <input type="hidden" name="return" value="http://www.minicartjs.com/?success" />
+                    				<input type="hidden" name="cancel_return" value="http://www.minicartjs.com/?cancel" />
+				                    <input type="submit" name="submit" value="Add to cart" class="button" style="bottom: 0px" disabled/>
+					            </fieldset>
+					            </form>
+							{% else %}
+								<span class="info" style="color: #3a3">Disponibile: {{i.quantity}}</span>
+								<form class="buy" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+								<fieldset style="border: 0px">
+				                    <input type="hidden" name="cmd" value="_cart" />
+				                    <input type="hidden" name="add" value="1" 
+				                    <input type="hidden" name="business" value="example@minicartjs.com" />
+				                    <input type="hidden" name="item_name" value="{{i.title}}" />
+				                    <input type="hidden" name="amount" value="{{i.price}}" />
+				                    <input type="hidden" name="currency_code" value="EUR" />
+				                    <input type="hidden" name="return" value="http://www.minicartjs.com/?success" />
+				                    <input type="hidden" name="cancel_return" value="http://www.minicartjs.com/?cancel" />
+				                    <input type="submit" name="submit" value="Add to cart" style="bottom: 0px"/>
+					            </fieldset>
+					            </form>
+							{% endif %}					
+							<img class="thumbnail" src="{{i.thumbnail_url}}"/>
+						</li>						
+				{% endfor %}
+			{% endfor %}
+		</ul>
+		{% else %}
+			<p>
+				<h1>Welcome to the Record Store Browser</h1>
+			</p>
+		{% endif %}
+	</div>
+	<div class="footer">Luca Casini - Francesco Mastellone © 2014</div>
 </div>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/minicart/3.0.5/minicart.min.js"></script>
+<script>
+    paypal.minicart.render();
+</script>
+
 </body>
 </html>

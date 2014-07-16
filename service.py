@@ -10,10 +10,11 @@ si mette a rispondere alle query.
 from flask import Flask
 from flask import render_template
 from flask import request
-
+import os
 import query
 
 app = Flask(__name__)
+
 @app.route('/index')
 def index():
 	return render_template('service.html', rv=None)
@@ -27,12 +28,12 @@ def search():
 	price = request.form['price']
 	if price == '':
 		price = None
-	rv = query.get_records(title=request.form['title'],author=request.form['author'],year=year,genre=request.form['genre'],price=price);
+	rv = query.get_records(title=request.form['title'], author=request.form['author'], year=year, genre=request.form['genre'], price=price)
 	return render_template('service.html', rv=rv)
 
 if __name__ == '__main__':
     import sys
     port = int(sys.argv[1]) #[0] is __name__
     
-    app.debug = True
-    app.run(port=port)
+    #app.debug = True
+    app.run(port=port,debug=True)

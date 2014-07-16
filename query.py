@@ -12,7 +12,7 @@ for url in urls:
     except URLError:
         logging.info("query's suds could not connect to {}".format(url))
 
-a = clients[0] #for quicker debugging. Excuse me.
+#a = clients[0] #for quicker debugging. Excuse me.
 
 def get_records(title=None, author=None, genre=None, year=None, thumbnail_url=None, description=None, quantity=None, price = None):
     """This is what the website is supposed to call. Safe."""
