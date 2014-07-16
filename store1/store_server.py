@@ -1,3 +1,8 @@
+"""
+Questo Modulo si interfaccia con il database e risponde alle query di ricerca via SOAP.
+SQLALchemy si occupa della gestione del databse SQLite,
+Spyne invece gestice la comunicazione SOAP
+"""
 import logging
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger('spyne.protocol.xml').setLevel(logging.DEBUG)
@@ -50,19 +55,6 @@ class RecordStoreService(ServiceBase):
                     q = q.filter_by(**{val: rq.__getattribute__(val)})
         for record in q:
             yield record
-
-class UserDefinedContext(object):
-    """Immagino si possa usare per limitare i privilegi. Inutile qui."""
-    def __init__(self):
-        self.session = Session()
-
-def _on_method_call(ctx):
-    ctx.udc = UserDefinedContext()
-
-def _on_method_context_closed(ctx):
-    if ctx.udc is not None:
-        ctx.udc.session.commit()
-        ctx.udc.session.close()
 
 class MyApplication(Application):
     def __init__(self, services, tns, name=None, in_protocol=None, out_protocol=None):

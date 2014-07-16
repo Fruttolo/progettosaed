@@ -1,3 +1,8 @@
+"""
+Questo Modulo permette di gestire il magazzino,
+si possono aggiungere, rimuore e modificare gli elementi del database.
+Si basa su Flask e la sua estensione Flask-Admin.
+"""
 import os
 import os.path as op
 from flask import Flask
@@ -34,14 +39,6 @@ class Record(db.Model):
     description = db.Column(db.Text)
     quantity = db.Column(db.Integer)
     price = db.Column(db.Integer)
-
-# Flask views
-# @app.route('/')
-# def index():
-#     return render_template('index.html')
-
-
-
 
 class RecordAdmin(sqla.ModelView):
     view_excluded_columns = ['description', ]
