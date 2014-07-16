@@ -1,5 +1,5 @@
 """
-Questo modulo è sostanzialmente un client SOAP con cui si interfaccia il servizio principale.
+Questo modulo e sostanzialmente un client SOAP con cui si interfaccia il servizio principale.
 Ottiene i wsdl dei magazzini leggendo il file warehouse.json,
 prende in input i parametri della query e restituisce la lista dei risultati della query.
 """
