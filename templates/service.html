@@ -211,11 +211,7 @@
 <script>
     paypal.minicart.render();
     
-<<<<<<< HEAD
     paypal.minicart.cart.on('add', function (idx, product, isExisting) {
-=======
-        paypal.minicart.cart.on('add', function (idx, product, isExisting) {
->>>>>>> 092253d1dde0ac27d991edaeef082dc52bd40818
 		if (isExisting) {
 			if(product.get('quantity') > product.get('max_quantity')){
 				product.set('quantity', product.get('max_quantity')-1);
