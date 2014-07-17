@@ -1,0 +1,49 @@
+PROGETTO Sistemi Aperti e Distribuiti
+
+LUCA CASINI
+FRANCESCO MASTELLONE
+
+Negozi di Dischi Online
+
+Immaginiamo un Negozio Online con uno o più magazzini sul territorio.
+I magazzini possono gestire autonomamente l'inventario e il sito si collega ad essi per reperire le informazioni sui prodotti disponibili.
+
+DIMOSTRAZIONE D'UTILIZZO:
+in un terminale(per ogni comando):
+    ./magazzino1/python2 soap_server.py 8000
+    ./magazzino2/python2 soap_server.py 8001
+    		>>>questi comandi avviano i server di ogni magazzino
+    ./magazzino1/python2 control_panel.py 6666
+    ./magazzino2/python2 control_panel.py 6667
+    		>>>questi comandi avviano i pannelli di controllo per ogni magazzino
+     ./python2 service.py 5000
+     		>>>questo comando avvia il sito web
+in un browser:
+    localhost 127.0.0.1:5000/index
+        	>>>a questo indirizzo troveremo il servizio
+    localhost 127.0.0.1:6666/admin
+        	>>>a questo indirizzo troveremo il pannello di controllo
+
+soap_server può partire sulla porta che vuole ma service va a cercare gli store dove dice warehouse.json: in localhost:8000 ed 8001
+
+Caso d'uso:
+    - Utente va sul sito unico, fa la ricerca(per nome, o genere, o...)
+    - Il sito chiede ai magazzini, via SOAP
+    - I magazzini, dei servizi SOAP, rispondono
+    - Il sito presenta i risultati della query all'utente
+
+Descrizione dei moduli: (fra parentesi le librerie usate)
+- service.py
+    L'interfaccia web (Flask) che prende i dati delle query dal un form e le via a query.py da cui ottiene i risultati da visualizzare.
+    Flask renderizza il file service.html, facendo uso deii template Jinja2(che fanno parte del pacchetto Flask) e di Javascript(carrello)
+- query.py
+    Il modulo che viene chiamato da service per generare la query da inviare al server via SOAP.
+    Il client SOAP è implementato con la libreria suds.
+- soap_server.py
+    Il servizio SOAP alla base della gestione del magazzino.
+    Utilizza la libreria Spyne per la comunicazione e SQLAlchemy per interfacciarsi con il Database SQLite
+- control_panel.py
+    il pannello di controllo che permette di modificare le entry del database, si basa su Flask-Admin(estensione di Flask)
+
+
+

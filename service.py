@@ -1,9 +1,8 @@
 """
 Modulo che implementa il servizio unificato.
-Carica una lista di magazzini e tenta di connettervisi.
+Gestice l'interfaccia web con l'utente.
 Invia una query con i parametri ricevuti dal form di ricerca.
 Ottiene un array di oggetti e li mostra al cliente.
-
 """
 
 from flask import Flask
