@@ -209,6 +209,15 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/minicart/3.0.5/minicart.min.js"></script>
 <script>
     paypal.minicart.render();
+    
+        paypal.minicart.cart.on('add', function (idx, product, isExisting) {
+		if (isExisting) {
+			if(product.get('quantity') > product.get('max_quantity')){
+				product.set('quantity', product.get('max_quantity')-1);
+				alert('Sorry, no more items available.');
+			}
+		}
+	});
 </script>
 
 </body>
